@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoldMass - Expérience Immersive</title>
+    <title>Hotel Goldmas - Expérience Immersive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --color-dark: #0a0a0a;
-            --color-red: #ff2a2a;
+            --color-red: #c62828;
             --color-gold: #ffd700;
             --color-light: #f0f0f0;
             --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -25,73 +25,77 @@
             background-color: var(--color-dark);
             color: var(--color-light);
             overflow-x: hidden;
-            touch-action: pan-y;
         }
 
-        /* Animation d'ouverture magique */
-        @keyframes cosmicFadeIn {
-            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0); }
+        /* Animation d'entrée */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+        .animate {
+            opacity: 0;
         }
 
-        /* Effet de particules cosmiques */
-        .cosmic-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            overflow: hidden;
+        .animated {
+            animation: fadeInUp 0.8s forwards;
         }
 
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-
-        /* Header immersif */
+        /* Header avec menu hamburger */
         header {
-            position: fixed;
-            top: 0;
             width: 100%;
-            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            transform: translateY(0);
-            transition: var(--transition);
-        }
-
-        header.hidden {
-            transform: translateY(-100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         #header-logo a {
+            font-family: 'Alta', sans-serif;
             font-size: 1.8rem;
-            font-weight: 800;
+            font-weight: bold;
             color: var(--color-gold);
             text-decoration: none;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--color-red);
+            letter-spacing: 2px;
+            position: relative;
         }
 
+        #header-logo a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-red);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+
+        #header-logo a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Menu hamburger */
         .menu-btn {
             width: 40px;
             height: 40px;
@@ -101,6 +105,7 @@
             align-items: center;
             gap: 6px;
             cursor: pointer;
+            z-index: 1001;
         }
 
         .menu-line {
@@ -122,7 +127,7 @@
             transform: translateY(-9px) rotate(-45deg);
         }
 
-        /* Menu mobile immersif */
+        /* Menu mobile */
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -168,7 +173,7 @@
             width: 100%;
         }
 
-        /* Section Hero - Portail dimensionnel */
+        /* Section Hero avec image de fond */
         #hero {
             height: 100vh;
             display: flex;
@@ -176,281 +181,280 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 1.5rem;
             position: relative;
             overflow: hidden;
+            background: url('./styles/assets/chambre_S.jpg') center/cover no-repeat;
         }
 
-        .portal {
+        #hero::before {
+            content: "";
             position: absolute;
-            width: 300vw;
-            height: 300vw;
-            background: radial-gradient(circle, rgba(255,42,42,0.2) 0%, rgba(255,42,42,0) 70%);
-            border-radius: 50%;
-            animation: pulse 8s infinite ease-in-out;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(198, 40, 40, 0.5));
             z-index: -1;
         }
 
         #hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 15px var(--color-red);
-            animation: cosmicFadeIn 1.5s ease-out;
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Alta', sans-serif;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
         }
 
         #hero p {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             margin-bottom: 2rem;
-            max-width: 500px;
+            letter-spacing: 2px;
+            max-width: 800px;
             line-height: 1.6;
-            animation: cosmicFadeIn 1.5s ease-out 0.3s forwards;
-            opacity: 0;
         }
 
         .cta-btn {
             display: inline-block;
-            padding: 1.2rem 2.5rem;
-            background: linear-gradient(45deg, var(--color-red), #ff6b6b);
+            padding: 1rem 2.5rem;
+            background: var(--color-red);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 25px rgba(255, 42, 42, 0.5);
-            animation: cosmicFadeIn 1.5s ease-out 0.6s forwards;
-            opacity: 0;
+            letter-spacing: 1px;
             transition: var(--transition);
-            border: none;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+        }
+
+        .cta-btn:hover {
+            background: transparent;
+            border-color: var(--color-red);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(198, 40, 40, 0.6);
+        }
+
+        /* Section Adresse */
+        #addresse {
+            padding: 5rem 2rem;
+            background: var(--color-dark);
             position: relative;
-            overflow: hidden;
+            z-index: 1;
+            background-image: url("https://www.transparenttextures.com/patterns/cartographer.png");
         }
 
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .cta-btn:hover::before {
-            left: 100%;
-        }
-
-        /* Section Chambres - Galaxie d'expériences */
-        .room-section {
-            padding: 5rem 1.5rem;
-            position: relative;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            text-align: center;
+        #addresse h2 {
+            font-size: 2.5rem;
             margin-bottom: 3rem;
-            position: relative;
+            text-align: center;
+            font-family: 'Alta', sans-serif;
+            color: var(--color-red);
+        }
+
+        #items {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        #items div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #items i {
+            font-size: 2rem;
+            color: var(--color-red);
+        }
+
+        #items p, #items a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        #ad-link a {
             display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 3px;
+            padding: 1rem 2.5rem;
             background: var(--color-red);
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.6s ease;
-        }
-
-        .section-title.in-view::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
-        .room-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .room-card {
-            background: rgba(30, 30, 30, 0.7);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
             transition: var(--transition);
-            transform: translateY(50px);
-            opacity: 0;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 42, 42, 0.1);
+            border: 2px solid transparent;
+            letter-spacing: 1px;
         }
 
-        .room-card.in-view {
-            transform: translateY(0);
-            opacity: 1;
+        #ad-link a:hover {
+            background: transparent;
+            border-color: var(--color-red);
+            transform: translateY(-5px);
         }
 
-        .room-image {
-            height: 250px;
-            overflow: hidden;
+        /* Section Chambres */
+        #chambre {
+            padding: 5rem 2rem;
+            background: white;
+            color: var(--color-dark);
             position: relative;
         }
 
-        .room-image img {
+        #chambre h3 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            font-family: 'Alta', sans-serif;
+            color: var(--color-red);
+        }
+
+        .containers {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        .chambres {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .chambres:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(198, 40, 40, 0.3);
+        }
+
+        .chambres img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
         }
 
-        .room-card:hover .room-image img {
+        .chambres:hover img {
             transform: scale(1.05);
         }
 
-        .price-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--color-gold);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-        }
-
         .room-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+            transform: translateY(100%);
+            transition: var(--transition);
         }
 
-        .room-info h3 {
+        .chambres:hover .room-info {
+            transform: translateY(0);
+        }
+
+        .room-info h4 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: var(--color-gold);
         }
 
-        .room-rating {
+        .room-price {
+            font-size: 1.2rem;
             color: var(--color-gold);
-            margin-bottom: 1rem;
-        }
-
-        .room-info p {
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            color: #ccc;
+            margin-bottom: 0.5rem;
         }
 
         .room-features {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .feature {
-            background: rgba(255, 42, 42, 0.2);
-            color: var(--color-red);
+            background: rgba(198, 40, 40, 0.3);
+            color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
         }
 
-        /* Section Contact - Vortex temporel */
-        #contact {
-            padding: 5rem 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-vortex {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200vw;
-            height: 200vw;
-            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, rgba(255,215,0,0) 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 60s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .contact-form {
-            background: rgba(30, 30, 30, 0.7);
-            padding: 2rem;
-            border-radius: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 42, 42, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--color-gold);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(50, 50, 50, 0.5);
-            border: 1px solid rgba(255, 42, 42, 0.3);
-            border-radius: 10px;
+        .room-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--color-red);
             color: white;
-            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--color-red);
-            box-shadow: 0 0 10px rgba(255, 42, 42, 0.3);
+        .room-link:hover {
+            background: var(--color-gold);
+            color: var(--color-dark);
         }
 
-        /* Footer - Porte des étoiles */
-        footer {
-            padding: 3rem 1.5rem;
+        /* Section Parallax */
+        .parallax-section {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
             position: relative;
-            overflow: hidden;
         }
 
-        .star-gate {
+        .parallax-section::before {
+            content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
-            box-shadow: 0 0 20px var(--color-gold);
-            animation: gateGlow 3s infinite ease-in-out;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
         }
 
-        @keyframes gateGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        .parallax-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .parallax-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-red);
+            font-family: 'Alta', sans-serif;
+        }
+
+        .parallax-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-dark);
+            padding: 3rem 2rem;
+            text-align: center;
         }
 
         .social-links {
@@ -467,36 +471,44 @@
         }
 
         .social-links a:hover {
-            color: var(--color-gold);
+            color: var(--color-red);
             transform: translateY(-5px);
         }
 
-        /* Responsive adaptations */
-        @media (min-width: 768px) {
+        /* Responsive */
+        @media (max-width: 768px) {
             #hero h1 {
-                font-size: 4rem;
+                font-size: 3rem;
             }
             
-            .room-grid {
-                grid-template-columns: repeat(2, 1fr);
-                max-width: 1200px;
+            #hero p {
+                font-size: 1.2rem;
             }
-        }
+            
+            .containers {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .chambres {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .mobile-menu a {
+                font-size: 1.5rem;
+            }
 
-        @media (min-width: 1024px) {
-            .room-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .parallax-section {
+                height: 60vh;
+                background-attachment: scroll;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Fond cosmique -->
-    <div class="cosmic-bg" id="cosmicBg"></div>
-
-    <!-- Header -->
-    <header id="mainHeader">
-        <div id="header-logo"><a href="#">GOLDMASS</a></div>
+    <header>
+        <div id="header-logo"><a href="#">Goldmas</a></div>
         <div class="menu-btn" id="menuBtn">
             <div class="menu-line"></div>
             <div class="menu-line"></div>
@@ -504,7 +516,6 @@
         </div>
     </header>
 
-    <!-- Menu mobile -->
     <nav class="mobile-menu" id="mobileMenu">
         <a href="./index.html">Accueil</a>
         <a href="./pages/explore.html">Explorer</a>
@@ -512,167 +523,103 @@
         <a href="./pages/reservation.html">Réserver</a>
     </nav>
 
-    <!-- Section Hero -->
-    <section id="hero">
-        <div class="portal"></div>
-        <h1>Voyagez hors du temps</h1>
-        <p>Plongez dans une expérience hôtelière qui défie les dimensions. GoldMass n'est pas une destination, c'est une transcendance.</p>
-        <a href="#rooms" class="cta-btn">Commencez l'expérience</a>
+    <section id="hero" class="animate">
+        <h1 class="animate">Bienvenue chez Goldmas</h1>
+        <p class="animate">Le confort assuré dès le pas de la porte...</p>
+        <a href="#chambre" class="cta-btn animate">Explorer</a>
     </section>
 
-    <!-- Section Chambres -->
-    <section class="room-section" id="rooms">
-        <h2 class="section-title">Nos Univers</h2>
-        <div class="room-grid">
-            <!-- Chambre 1 -->
-            <div class="room-card">
-                <div class="room-image">
-                    <img src="./styles/assets/chambre_A.jpg" alt="Nébuleuse Dorée" loading="lazy">
-                    <div class="price-tag">€290/nuit</div>
-                </div>
+    <section id="addresse" class="animate">
+        <div>
+            <h2 class="animate">Hôtel Goldmas</h2>
+        </div>
+
+        <div id="items">
+            <div class="animate"><i class="fa-solid fa-home"></i><p>Station Macampagne</p></div>
+            <div class="animate"><i class="fa-solid fa-phone"></i><p><a href="https://wa.me/2439999999999">+243 9900000000</a></p></div>
+            <div class="animate"><i class="fa-solid fa-envelope"></i><p>Goldmas@gmail.com</p></div>
+        </div>
+
+        <div id="ad-link" class="animate">
+            <a href="./pages/reservation">Réservez</a>
+        </div>
+    </section>
+
+    <section id="chambre" class="animate">
+        <h3 class="animate">Profitez du confort et du meilleur</h3>
+
+        <div class="containers">
+            <!-- Chambre Deluxe -->
+            <div class="chambres animate">
+                <img src="./styles/assets/chambre_A.jpg" alt="Chambre Deluxe" loading="lazy">
                 <div class="room-info">
-                    <h3>Nébuleuse Dorée</h3>
-                    <div class="room-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <p>Un cocon spatial où le temps s'étire à l'infini. Plafond étoilé interactif et gravité ajustable.</p>
+                    <h4>Chambre Deluxe</h4>
+                    <div class="room-price">À partir de €290/nuit</div>
                     <div class="room-features">
-                        <span class="feature">35m²</span>
-                        <span class="feature">Lit anti-gravité</span>
-                        <span class="feature">Douche stellaire</span>
+                        <span class="feature">25m²</span>
+                        <span class="feature">Lit Queen</span>
+                        <span class="feature">WiFi</span>
+                        <span class="feature">TV</span>
                     </div>
-                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
                 </div>
             </div>
 
-            <!-- Chambre 2 -->
-            <div class="room-card">
-                <div class="room-image">
-                    <img src="./styles/assets/chambre_B.jpg" alt="Horizon Écarlate" loading="lazy">
-                    <div class="price-tag">€420/nuit</div>
-                </div>
+            <!-- Suite Présidentielle -->
+            <div class="chambres animate">
+                <img src="./styles/assets/chambre_B.jpg" alt="Suite Présidentielle" loading="lazy">
                 <div class="room-info">
-                    <h3>Horizon Écarlate</h3>
-                    <div class="room-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p>Surplombez un monde inconnu depuis votre suite suspendue dans le vide intersidéral.</p>
+                    <h4>Suite Présidentielle</h4>
+                    <div class="room-price">À partir de €450/nuit</div>
                     <div class="room-features">
-                        <span class="feature">50m²</span>
-                        <span class="feature">Terrasse dimensionnelle</span>
-                        <span class="feature">Bain à flottaison</span>
+                        <span class="feature">90m²</span>
+                        <span class="feature">Jacuzzi</span>
+                        <span class="feature">Service 24/7</span>
+                        <span class="feature">Vue exceptionnelle</span>
                     </div>
-                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
                 </div>
             </div>
 
-            <!-- Chambre 3 -->
-            <div class="room-card">
-                <div class="room-image">
-                    <img src="./styles/assets/chambre_S.jpg" alt="Singularité Noire" loading="lazy">
-                    <div class="price-tag">€750/nuit</div>
-                </div>
+            <!-- Chambre Familiale -->
+            <div class="chambres animate">
+                <img src="./styles/assets/chambre_S.jpg" alt="Chambre Familiale" loading="lazy">
                 <div class="room-info">
-                    <h3>Singularité Noire</h3>
-                    <div class="room-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p>Notre suite ultime où les lois de la physique se dissolvent. Expérience sensorielle totale.</p>
+                    <h4>Chambre Familiale</h4>
+                    <div class="room-price">À partir de €200/nuit</div>
                     <div class="room-features">
-                        <span class="feature">80m²</span>
-                        <span class="feature">Champ de force privé</span>
-                        <span class="feature">Service télépathique</span>
+                        <span class="feature">45m²</span>
+                        <span class="feature">2 Lits doubles</span>
+                        <span class="feature">Jeux enfants</span>
+                        <span class="feature">Baby-sitting</span>
                     </div>
-                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section Contact -->
-    <section id="contact">
-        <div class="contact-vortex"></div>
-        <h2 class="section-title">Contactez notre dimension</h2>
-        <form class="contact-form">
-            <div class="form-group">
-                <label for="name">Votre nom</label>
-                <input type="text" id="name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Coordonnées intergalactiques</label>
-                <input type="email" id="email" required>
-            </div>
-            <div class="form-group">
-                <label for="message">Votre message transdimensionnel</label>
-                <textarea id="message" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="cta-btn">Envoyer dans le vortex</button>
-        </form>
+    <section class="parallax-section animate" style="background-image: url('./styles/assets/chambre_Aaa.jpg')">
+        <div class="parallax-content">
+            <h2 class="animate">Une Expérience Inoubliable</h2>
+            <p class="animate">Découvrez le confort ultime et un service exceptionnel dans notre établissement primé.</p>
+            <a href="#contact" class="cta-btn animate">Contactez-nous</a>
+        </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="star-gate"></div>
-        <p>GoldMass © 2023</p>
-        <p>Station Macampagne, Dimension X-294</p>
+    <footer class="animate">
+        <p>© 2023 Hotel Goldmas. Tous droits réservés.</p>
         <div class="social-links">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="#"><i class="fab fa-tripadvisor"></i></a>
         </div>
-        <p>Créé par Axel Nodier avec <i class="fas fa-heart" style="color: var(--color-red);"></i></p>
+        <p>Créé avec passion par Axel Nodier</p>
     </footer>
 
     <script>
-        // Création des particules cosmiques
-        function createParticles() {
-            const cosmicBg = document.getElementById('cosmicBg');
-            const particleCount = window.innerWidth < 768 ? 50 : 100;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Position aléatoire
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                
-                // Taille aléatoire
-                const size = Math.random() * 3 + 1;
-                
-                // Opacité aléatoire
-                const opacity = Math.random() * 0.8 + 0.2;
-                
-                // Durée d'animation aléatoire
-                const duration = 10 + Math.random() * 20 + 's';
-                const delay = Math.random() * 5 + 's';
-                
-                particle.style.left = `${x}%`;
-                particle.style.top = `${y}%`;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.opacity = opacity;
-                particle.style.animationDuration = duration;
-                particle.style.animationDelay = delay;
-                
-                cosmicBg.appendChild(particle);
-            }
-        }
-
-        // Menu mobile
+        // Menu hamburger
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         
@@ -682,72 +629,43 @@
         });
 
         // Animation au scroll
-        function animateOnScroll() {
-            const sections = document.querySelectorAll('.room-section, #contact');
-            const sectionTitle = document.querySelector('.section-title');
-            const roomCards = document.querySelectorAll('.room-card');
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.animate');
             
-            // Animation du titre de section
-            const titlePosition = sectionTitle.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.3;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            animateElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // Cache le header au scroll
+            let lastScroll = 0;
+            const header = document.querySelector('header');
             
-            if (titlePosition < screenPosition) {
-                sectionTitle.classList.add('in-view');
-            }
-            
-            // Animation des cartes
-            roomCards.forEach((card, index) => {
-                const cardPosition = card.getBoundingClientRect().top;
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
                 
-                if (cardPosition < screenPosition) {
-                    card.style.transitionDelay = `${index * 0.1}s`;
-                    card.classList.add('in-view');
+                if (currentScroll <= 0) {
+                    header.classList.remove('hidden');
                 }
-            });
-            
-            // Animation du header
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 100) {
-                header.classList.add('hidden');
-            } else {
-                header.classList.remove('hidden');
-            }
-        }
-
-        // Effet de parallax sur le portal
-        function updatePortal() {
-            const portal = document.querySelector('.portal');
-            const scrollValue = window.scrollY;
-            portal.style.transform = `scale(${1 + scrollValue * 0.0005}) rotate(${scrollValue * 0.1}deg)`;
-        }
-
-        // Initialisation
-        window.addEventListener('load', () => {
-            createParticles();
-            
-            // Délai pour l'animation du titre
-            setTimeout(() => {
-                document.querySelector('h1').style.animation = 'none';
-                document.querySelector('h1').offsetHeight; // Trigger reflow
-                document.querySelector('h1').style.animation = 'cosmicFadeIn 1.5s ease-out';
-            }, 500);
-        });
-
-        window.addEventListener('scroll', () => {
-            animateOnScroll();
-            updatePortal();
-        });
-
-        // Effet de survol cosmique
-        document.querySelectorAll('.cta-btn').forEach(btn => {
-            btn.addEventListener('mouseover', () => {
-                const portal = document.querySelector('.portal');
-                portal.style.animation = 'pulse 2s infinite ease-in-out';
-            });
-            
-            btn.addEventListener('mouseout', () => {
-                const portal = document.querySelector('.portal');
-                portal.style.animation = 'pulse 8s infinite ease-in-out';
+                
+                if (currentScroll > lastScroll && !header.classList.contains('hidden')) {
+                    header.classList.add('hidden');
+                } else if (currentScroll < lastScroll && header.classList.contains('hidden')) {
+                    header.classList.remove('hidden');
+                }
+                
+                lastScroll = currentScroll;
             });
         });
     </script>
