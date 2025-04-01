@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Hôtel - Nos Chambres</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a1a;
+            --accent-red: #c62828;
+            --soft-red: #e53935;
+            --light-text: #f5f5f5;
+            --dark-text: #333;
+            --transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            overflow-x: hidden;
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: url('./styles/assets/chambre_S.jpg') center/cover no-repeat;
+            z-index: -2;
+            opacity: 0.2;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent-red);
+        }
+
+        .rooms-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .room-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: fadeInUp 1s forwards;
+            animation-delay: calc(var(--delay) * 0.2s);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(198, 40, 40, 0.3);
+        }
+
+        .room-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .room-card:hover .room-image img {
+            transform: scale(1.05);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .room-info {
+            padding: 1.5rem;
+        }
+
+        .room-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+        }
+
+        .room-info p {
+            color: #aaa;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature {
+            background: rgba(198, 40, 40, 0.2);
+            color: var(--accent-red);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .rating {
+            color: #ffc107;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--soft-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-red);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-icons a {
+            color: #aaa;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            color: var(--accent-red);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Effet parallax */
+        .parallax-section {
+            height: 60vh;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5rem 0;
+        }
+
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .parallax-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .parallax-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Animation des étoiles */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax-bg"></div>
+    <div class="stars" id="stars"></div>
+
+    <header>
+        <div class="logo">Luxury Hôtel</div>
+    </header>
+
+    <section class="rooms-section">
+        <div class="section-title">
+            <h2>Nos Chambres Exclusives</h2>
+        </div>
+
+        <div class="rooms-container">
+            <!-- Chambre A -->
+            <div class="room-card" style="--delay: 1">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_A.jpg" alt="Chambre Classique">
+                    <div class="price-tag">€120/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Chambre Classique</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p>Une chambre élégante avec tout le confort nécessaire pour un séjour agréable. Parfait pour les voyageurs en solo ou les couples.</p>
+                    <div class="features">
+                        <span class="feature">25m²</span>
+                        <span class="feature">Lit Queen</span>
+                        <span class="feature">WiFi</span>
+                        <span class="feature">TV</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+
+            <!-- Chambre B -->
+            <div class="room-card" style="--delay: 2">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_B.jpg" alt="Chambre Supérieure">
+                    <div class="price-tag">€180/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Chambre Supérieure</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p>Un espace plus généreux avec une décoration raffinée et des équipements haut de gamme pour un séjour luxueux.</p>
+                    <div class="features">
+                        <span class="feature">35m²</span>
+                        <span class="feature">Lit King</span>
+                        <span class="feature">Mini-bar</span>
+                        <span class="feature">Vue jardin</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+
+            <!-- Chambre S -->
+            <div class="room-card" style="--delay: 3">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_S.jpg" alt="Suite Deluxe">
+                    <div class="price-tag">€280/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Suite Deluxe</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Notre suite la plus exclusive avec espace salon séparé, salle de bain en marbre et services VIP. L'expérience ultime du luxe.</p>
+                    <div class="features">
+                        <span class="feature">60m²</span>
+                        <span class="feature">Lit King</span>
+                        <span class="feature">Service VIP</span>
+                        <span class="feature">Vue panoramique</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="parallax-section" style="background-image: url('./styles/assets/chambre_Aaa.jpg')">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>Une Expérience Inoubliable</h2>
+            <p>Découvrez le confort ultime et un service exceptionnel dans notre établissement primé. Laissez-vous séduire par notre ambiance unique.</p>
+            <a href="#contact" class="btn">Contactez-nous</a>
+        </div>
+    </section>
+
+    <section class="rooms-section">
+        <div class="rooms-container">
+            <!-- Chambre Aa -->
+            <div class="room-card" style="--delay: 4">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_Aa.jpg" alt="Chambre Exécutive">
+                    <div class="price-tag">€220/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Chambre Exécutive</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Idéale pour les voyageurs d'affaires, avec un espace bureau ergonomique et tous les équipements nécessaires pour travailler efficacement.</p>
+                    <div class="features">
+                        <span class="feature">40m²</span>
+                        <span class="feature">Bureau</span>
+                        <span class="feature">Accès lounge</span>
+                        <span class="feature">Service pressing</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+
+            <!-- Chambre Aaaa -->
+            <div class="room-card" style="--delay: 5">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_Aaaa.jpg" alt="Chambre Familiale">
+                    <div class="price-tag">€200/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Chambre Familiale</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p>Un espace spacieux parfait pour les familles, avec des lits supplémentaires et des équipements adaptés aux enfants.</p>
+                    <div class="features">
+                        <span class="feature">45m²</span>
+                        <span class="feature">2 Lits doubles</span>
+                        <span class="feature">Jeux enfants</span>
+                        <span class="feature">Baby-sitting</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+
+            <!-- Chambre Aaa -->
+            <div class="room-card" style="--delay: 6">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_Aaa.jpg" alt="Suite Présidentielle">
+                    <div class="price-tag">€450/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Suite Présidentielle</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Le summum du luxe avec espace salon, salle à manger privée, jacuzzi et services sur mesure. Pour ceux qui exigent l'excellence.</p>
+                    <div class="features">
+                        <span class="feature">90m²</span>
+                        <span class="feature">Jacuzzi</span>
+                        <span class="feature">Service 24/7</span>
+                        <span class="feature">Vue exceptionnelle</span>
+                    </div>
+                    <a href="#reservation" class="btn">Réserver maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">Luxury Hôtel</div>
+            <div class="footer-links">
+                <a href="#">Accueil</a>
+                <a href="#">Chambres</a>
+                <a href="#">Services</a>
+                <a href="#">Restaurant</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-tripadvisor"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Luxury Hôtel. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Créer des étoiles qui scintillent
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Position aléatoire
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Taille aléatoire
+                const size = Math.random() * 2;
+                
+                // Durée d'animation aléatoire
+                const duration = 5 + Math.random() * 10 + 's';
+                const delay = Math.random() * 5 + 's';
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', duration);
+                star.style.animationDelay = delay;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Animation au scroll
+        function animateOnScroll() {
+            const roomCards = document.querySelectorAll('.room-card');
+            
+            roomCards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (cardTop < windowHeight - 100) {
+                    card.style.animation = `fadeInUp 1s forwards`;
+                }
+            });
+        }
+
+        // Initialisation
+        window.addEventListener('load', () => {
+            createStars();
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+</html>

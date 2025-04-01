@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldMass - Expérience Immersive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark: #0a0a0a;
+            --color-red: #ff2a2a;
+            --color-gold: #ffd700;
+            --color-light: #f0f0f0;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            overflow-x: hidden;
+            touch-action: pan-y;
+        }
+
+        /* Animation d'ouverture magique */
+        @keyframes cosmicFadeIn {
+            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Effet de particules cosmiques */
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        /* Header immersif */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: var(--transition);
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        #header-logo a {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--color-gold);
+            text-decoration: none;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--color-red);
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-line {
+            width: 30px;
+            height: 3px;
+            background: var(--color-gold);
+            transition: var(--transition);
+        }
+
+        .menu-btn.active .menu-line:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-btn.active .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-btn.active .menu-line:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Menu mobile immersif */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            clip-path: circle(0% at 90% 5%);
+            transition: clip-path 1s ease-in-out;
+        }
+
+        .mobile-menu.open {
+            clip-path: circle(150% at 90% 5%);
+        }
+
+        .mobile-menu a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 2rem;
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .mobile-menu a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-red);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover::before {
+            width: 100%;
+        }
+
+        /* Section Hero - Portail dimensionnel */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal {
+            position: absolute;
+            width: 300vw;
+            height: 300vw;
+            background: radial-gradient(circle, rgba(255,42,42,0.2) 0%, rgba(255,42,42,0) 70%);
+            border-radius: 50%;
+            animation: pulse 8s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        #hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px var(--color-red);
+            animation: cosmicFadeIn 1.5s ease-out;
+        }
+
+        #hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.6;
+            animation: cosmicFadeIn 1.5s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(45deg, var(--color-red), #ff6b6b);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 25px rgba(255, 42, 42, 0.5);
+            animation: cosmicFadeIn 1.5s ease-out 0.6s forwards;
+            opacity: 0;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Section Chambres - Galaxie d'expériences */
+        .room-section {
+            padding: 5rem 1.5rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--color-red);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.6s ease;
+        }
+
+        .section-title.in-view::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .room-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 42, 42, 0.1);
+        }
+
+        .room-card.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .room-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .room-card:hover .room-image img {
+            transform: scale(1.05);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--color-gold);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+        }
+
+        .room-info {
+            padding: 1.5rem;
+        }
+
+        .room-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-gold);
+        }
+
+        .room-rating {
+            color: var(--color-gold);
+            margin-bottom: 1rem;
+        }
+
+        .room-info p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature {
+            background: rgba(255, 42, 42, 0.2);
+            color: var(--color-red);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Section Contact - Vortex temporel */
+        #contact {
+            padding: 5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-vortex {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200vw;
+            height: 200vw;
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, rgba(255,215,0,0) 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: spin 60s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .contact-form {
+            background: rgba(30, 30, 30, 0.7);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 42, 42, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-gold);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(50, 50, 50, 0.5);
+            border: 1px solid rgba(255, 42, 42, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-red);
+            box-shadow: 0 0 10px rgba(255, 42, 42, 0.3);
+        }
+
+        /* Footer - Porte des étoiles */
+        footer {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .star-gate {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            box-shadow: 0 0 20px var(--color-gold);
+            animation: gateGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes gateGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: var(--color-light);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--color-gold);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive adaptations */
+        @media (min-width: 768px) {
+            #hero h1 {
+                font-size: 4rem;
+            }
+            
+            .room-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 1200px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .room-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fond cosmique -->
+    <div class="cosmic-bg" id="cosmicBg"></div>
+
+    <!-- Header -->
+    <header id="mainHeader">
+        <div id="header-logo"><a href="#">GOLDMASS</a></div>
+        <div class="menu-btn" id="menuBtn">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </div>
+    </header>
+
+    <!-- Menu mobile -->
+    <nav class="mobile-menu" id="mobileMenu">
+        <a href="./index.html">Accueil</a>
+        <a href="./pages/explore.html">Explorer</a>
+        <a href="./pages/Contact.html">Contact</a>
+        <a href="./pages/reservation.html">Réserver</a>
+    </nav>
+
+    <!-- Section Hero -->
+    <section id="hero">
+        <div class="portal"></div>
+        <h1>Voyagez hors du temps</h1>
+        <p>Plongez dans une expérience hôtelière qui défie les dimensions. GoldMass n'est pas une destination, c'est une transcendance.</p>
+        <a href="#rooms" class="cta-btn">Commencez l'expérience</a>
+    </section>
+
+    <!-- Section Chambres -->
+    <section class="room-section" id="rooms">
+        <h2 class="section-title">Nos Univers</h2>
+        <div class="room-grid">
+            <!-- Chambre 1 -->
+            <div class="room-card">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_A.jpg" alt="Nébuleuse Dorée" loading="lazy">
+                    <div class="price-tag">€290/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Nébuleuse Dorée</h3>
+                    <div class="room-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p>Un cocon spatial où le temps s'étire à l'infini. Plafond étoilé interactif et gravité ajustable.</p>
+                    <div class="room-features">
+                        <span class="feature">35m²</span>
+                        <span class="feature">Lit anti-gravité</span>
+                        <span class="feature">Douche stellaire</span>
+                    </div>
+                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                </div>
+            </div>
+
+            <!-- Chambre 2 -->
+            <div class="room-card">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_B.jpg" alt="Horizon Écarlate" loading="lazy">
+                    <div class="price-tag">€420/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Horizon Écarlate</h3>
+                    <div class="room-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Surplombez un monde inconnu depuis votre suite suspendue dans le vide intersidéral.</p>
+                    <div class="room-features">
+                        <span class="feature">50m²</span>
+                        <span class="feature">Terrasse dimensionnelle</span>
+                        <span class="feature">Bain à flottaison</span>
+                    </div>
+                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                </div>
+            </div>
+
+            <!-- Chambre 3 -->
+            <div class="room-card">
+                <div class="room-image">
+                    <img src="./styles/assets/chambre_S.jpg" alt="Singularité Noire" loading="lazy">
+                    <div class="price-tag">€750/nuit</div>
+                </div>
+                <div class="room-info">
+                    <h3>Singularité Noire</h3>
+                    <div class="room-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Notre suite ultime où les lois de la physique se dissolvent. Expérience sensorielle totale.</p>
+                    <div class="room-features">
+                        <span class="feature">80m²</span>
+                        <span class="feature">Champ de force privé</span>
+                        <span class="feature">Service télépathique</span>
+                    </div>
+                    <a href="./pages/reservation.html" class="cta-btn">Réserver ce voyage</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact -->
+    <section id="contact">
+        <div class="contact-vortex"></div>
+        <h2 class="section-title">Contactez notre dimension</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name">Votre nom</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Coordonnées intergalactiques</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Votre message transdimensionnel</label>
+                <textarea id="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="cta-btn">Envoyer dans le vortex</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="star-gate"></div>
+        <p>GoldMass © 2023</p>
+        <p>Station Macampagne, Dimension X-294</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p>Créé par Axel Nodier avec <i class="fas fa-heart" style="color: var(--color-red);"></i></p>
+    </footer>
+
+    <script>
+        // Création des particules cosmiques
+        function createParticles() {
+            const cosmicBg = document.getElementById('cosmicBg');
+            const particleCount = window.innerWidth < 768 ? 50 : 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Position aléatoire
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Taille aléatoire
+                const size = Math.random() * 3 + 1;
+                
+                // Opacité aléatoire
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                // Durée d'animation aléatoire
+                const duration = 10 + Math.random() * 20 + 's';
+                const delay = Math.random() * 5 + 's';
+                
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.opacity = opacity;
+                particle.style.animationDuration = duration;
+                particle.style.animationDelay = delay;
+                
+                cosmicBg.appendChild(particle);
+            }
+        }
+
+        // Menu mobile
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Animation au scroll
+        function animateOnScroll() {
+            const sections = document.querySelectorAll('.room-section, #contact');
+            const sectionTitle = document.querySelector('.section-title');
+            const roomCards = document.querySelectorAll('.room-card');
+            
+            // Animation du titre de section
+            const titlePosition = sectionTitle.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.3;
+            
+            if (titlePosition < screenPosition) {
+                sectionTitle.classList.add('in-view');
+            }
+            
+            // Animation des cartes
+            roomCards.forEach((card, index) => {
+                const cardPosition = card.getBoundingClientRect().top;
+                
+                if (cardPosition < screenPosition) {
+                    card.style.transitionDelay = `${index * 0.1}s`;
+                    card.classList.add('in-view');
+                }
+            });
+            
+            // Animation du header
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 100) {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+        }
+
+        // Effet de parallax sur le portal
+        function updatePortal() {
+            const portal = document.querySelector('.portal');
+            const scrollValue = window.scrollY;
+            portal.style.transform = `scale(${1 + scrollValue * 0.0005}) rotate(${scrollValue * 0.1}deg)`;
+        }
+
+        // Initialisation
+        window.addEventListener('load', () => {
+            createParticles();
+            
+            // Délai pour l'animation du titre
+            setTimeout(() => {
+                document.querySelector('h1').style.animation = 'none';
+                document.querySelector('h1').offsetHeight; // Trigger reflow
+                document.querySelector('h1').style.animation = 'cosmicFadeIn 1.5s ease-out';
+            }, 500);
+        });
+
+        window.addEventListener('scroll', () => {
+            animateOnScroll();
+            updatePortal();
+        });
+
+        // Effet de survol cosmique
+        document.querySelectorAll('.cta-btn').forEach(btn => {
+            btn.addEventListener('mouseover', () => {
+                const portal = document.querySelector('.portal');
+                portal.style.animation = 'pulse 2s infinite ease-in-out';
+            });
+            
+            btn.addEventListener('mouseout', () => {
+                const portal = document.querySelector('.portal');
+                portal.style.animation = 'pulse 8s infinite ease-in-out';
+            });
+        });
+    </script>
+</body>
+</html>

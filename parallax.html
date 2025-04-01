@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            height: 600px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 50%;
+            height: 300px;
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            transform-style: preserve-3d;
+            animation: rotate 20s infinite linear;
+          }
+
+        .carousel:hover {
+            animation-play-state: paused;
+        }
+
+        .item {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            transform-origin: center center;
+            transition: transform 0.5s ease;
+        }
+
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="item" style="background-image: url('https://picsum.photos/600/800?random=1'); transform: rotateY(0deg) translateZ(400px);"></div>
+            <div class="item" style="background-image: url('https://picsum.photos/600/800?random=2'); transform: rotateY(72deg) translateZ(400px);"></div>
+            <div class="item" style="background-image: url('https://picsum.photos/600/800?random=3'); transform: rotateY(144deg) translateZ(400px);"></div>
+            <div class="item" style="background-image: url('https://picsum.photos/600/800?random=4'); transform: rotateY(216deg) translateZ(400px);"></div>
+            <div class="item" style="background-image: url('https://picsum.photos/600/800?random=5'); transform: rotateY(288deg) translateZ(400px);"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" onclick="slowDown()">-</button>
+        <button class="control-btn" onclick="playPause()">⏸</button>
+        <button class="control-btn" onclick="speedUp()">+</button>
+    </div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        let isPlaying = true;
+        let rotationSpeed = 20; // seconds for full rotation
+
+        function updateAnimation() {
+            carousel.style.animation = `rotate ${rotationSpeed}s infinite linear`;
+        }
+
+        function playPause() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                carousel.style.animationPlayState = 'running';
+            } else {
+                carousel.style.animationPlayState = 'paused';
+            }
+        }
+
+        function speedUp() {
+            rotationSpeed = Math.max(2, rotationSpeed - 2);
+            updateAnimation();
+        }
+
+        function slowDown() {
+            rotationSpeed += 2;
+            updateAnimation();
+        }
+
+        // Pause on hover
+        carousel.addEventListener('mouseenter', () => {
+            carousel.style.animationPlayState = 'paused';
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            if (isPlaying) {
+                carousel.style.animationPlayState = 'running';
+            }
+        });
+    </script>
+</body>
+</html>
