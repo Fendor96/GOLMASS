@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldMass - Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark: #0a0a0a;
+            --color-red: #c62828;
+            --color-gold: #ffd700;
+            --color-light: #f0f0f0;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            overflow-x: hidden;
+        }
+
+        /* Animation d'entrée */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            opacity: 0;
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        /* Header avec menu hamburger */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #header-logo a {
+            font-family: 'Alta', sans-serif;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--color-gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        /* Menu hamburger */
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-line {
+            width: 30px;
+            height: 3px;
+            background: var(--color-gold);
+            transition: var(--transition);
+        }
+
+        .menu-btn.active .menu-line:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-btn.active .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-btn.active .menu-line:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Menu mobile */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            clip-path: circle(0% at 90% 5%);
+            transition: clip-path 1s ease-in-out;
+        }
+
+        .mobile-menu.open {
+            clip-path: circle(150% at 90% 5%);
+        }
+
+        .mobile-menu a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 2rem;
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .mobile-menu a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-red);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu a.active {
+            color: var(--color-red);
+        }
+
+        /* Hero Section */
+        #explore-hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: url('./styles/assets/chambre_Aaa.jpg') center/cover no-repeat;
+            margin-top: 80px;
+        }
+
+        #explore-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(198, 40, 40, 0.5));
+            z-index: -1;
+        }
+
+        #explore-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-family: 'Alta', sans-serif;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+        }
+
+        /* Section Découverte */
+        .discovery-section {
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-family: 'Alta', sans-serif;
+            color: var(--color-red);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--color-red);
+        }
+
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .discovery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .discovery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .discovery-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        .discovery-card.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .discovery-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(198, 40, 40, 0.3);
+        }
+
+        .discovery-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .discovery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .discovery-card:hover .discovery-image img {
+            transform: scale(1.05);
+        }
+
+        .discovery-content {
+            padding: 1.5rem;
+        }
+
+        .discovery-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-gold);
+        }
+
+        .discovery-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .discovery-link {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--color-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .discovery-link:hover {
+            background: var(--color-gold);
+            color: var(--color-dark);
+        }
+
+        /* Section Parallax */
+        .explore-parallax {
+            height: 50vh;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .explore-parallax::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .parallax-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-red);
+            font-family: 'Alta', sans-serif;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-dark);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: var(--color-light);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--color-red);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #explore-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .explore-parallax {
+                background-attachment: scroll;
+                height: 60vh;
+            }
+        }
+
+        .active{
+            color: red;
+            border-bottom: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="header-logo"><a href="../index.html">Goldmas</a></div>
+        <div class="menu-btn" id="menuBtn">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </div>
+    </header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <a href="../index.html">Accueil</a>
+        <a href="./explorer.html" class="active">Explorer</a>
+        <a href="./Contact.html">Contact</a>
+        <a href="./reservation.html">Réserver</a>
+    </nav>
+
+
+
+    <section id="explore-hero" class="animate">
+        <h1 class="animate">Explorez l'Exceptionnel</h1>
+    </section>
+
+    <section class="discovery-section">
+        <h2 class="section-title animate">Nos Univers d'Exception</h2>
+        <div class="discovery-grid">
+            <!-- Spa -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Spa Luxury" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Spa Céleste</h3>
+                    <p>Plongez dans notre oasis de bien-être avec soins signature et piscine à débordement offrant une vue panoramique.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+
+            <!-- Restaurant -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Restaurant" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Restaurant Étoilé</h3>
+                    <p>Cuisine gastronomique revisitée par notre chef étoilé avec produits locaux et cave à vin exceptionnelle.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+
+            <!-- Piscine -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Piscine" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Oasis Infinie</h3>
+                    <p>Notre piscine à l'architecture avant-gardiste semble se fondre dans l'horizon avec son eau turquoise.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+
+            <!-- Bar -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Bar" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Bar Constellation</h3>
+                    <p>Un voyage mixologique sous un plafond étoilé interactif. Cocktails signatures inspirés des constellations.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+
+            <!-- Fitness -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Fitness" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Espace Vitalité</h3>
+                    <p>Centre fitness high-tech avec coach personnel, yoga face à la mer et programmes de remise en forme sur mesure.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+
+            <!-- Événements -->
+            <div class="discovery-card animate">
+                <div class="discovery-image">
+                    <img src="https://images.unsplash.com/photo-1679678691006-0ad24fecb769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Événements" loading="lazy">
+                </div>
+                <div class="discovery-content">
+                    <h3>Salons Événementiels</h3>
+                    <p>Espaces modulables pour réceptions, mariages et séminaires avec service traiteur et technologie de pointe.</p>
+                    <a href="#" class="discovery-link">Découvrir</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="explore-parallax" style="background-image: url('./styles/assets/chambre_Aaaa.jpg')">
+        <div class="parallax-content">
+            <h2 class="animate">Votre Expérience Sur Mesure</h2>
+            <p class="animate">Nos concierges élaborent des parcours personnalisés pour rendre votre séjour inoubliable.</p>
+        </div>
+    </section>
+
+    <footer class="animate">
+        <p>© 2025 Hotel GoldMass. Tous droits réservés.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tripadvisor"></i></a>
+        </div>
+        <p>Créé avec passion par Axel Nodier</p>
+    </footer>
+
+    <script>
+        // Menu hamburger
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Animation au scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.animate');
+            const discoveryCards = document.querySelectorAll('.discovery-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        
+                        if (entry.target.classList.contains('discovery-card')) {
+                            entry.target.classList.add('in-view');
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            animateElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // Animation des cartes avec délai progressif
+            discoveryCards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+            });
+
+            // Cache le header au scroll
+            let lastScroll = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('hidden');
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('hidden')) {
+                    header.classList.add('hidden');
+                } else if (currentScroll < lastScroll && header.classList.contains('hidden')) {
+                    header.classList.remove('hidden');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        });
+    </script>
+</body>
+</html>

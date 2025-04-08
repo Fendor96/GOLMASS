@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Réservez votre séjour à l'hôtel Goldmas. Choisissez parmi nos chambres luxueuses et profitez d'une expérience inoubliable.">
+    <title>Réservation - Hôtel Goldmas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark: #0a0a0a;
+            --color-red: #c62828;
+            --color-gold: #ffd700;
+            --color-light: #f0f0f0;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        #header-logo a {
+            font-family: 'Alta', sans-serif;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--color-gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        /* Menu hamburger */
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-line {
+            width: 30px;
+            height: 3px;
+            background: var(--color-gold);
+            transition: var(--transition);
+        }
+
+        .menu-btn.active .menu-line:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu-btn.active .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-btn.active .menu-line:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Menu mobile */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            clip-path: circle(0% at 90% 5%);
+            transition: clip-path 1s ease-in-out;
+        }
+
+        .mobile-menu.open {
+            clip-path: circle(150% at 90% 5%);
+        }
+
+        .mobile-menu a {
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 2rem;
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .mobile-menu a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-red);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu a.active {
+            color: var(--color-red);
+        }
+
+        /* Hero Réservation */
+        #reservation-hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: url('../styles/assets/chambre_S.jpg') center/cover no-repeat;
+            margin-top: 80px;
+        }
+
+        #reservation-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(198, 40, 40, 0.5));
+            z-index: -1;
+        }
+
+        #reservation-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Alta', sans-serif;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+        }
+
+        #reservation-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        /* Section Réservation */
+        #reservation-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reservation-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        /* Formulaire de réservation */
+        .reservation-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .reservation-form h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--color-gold);
+            font-family: 'Alta', sans-serif;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .reservation-form h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--color-red);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-red);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .date-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            background: var(--color-red);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--color-gold);
+            color: var(--color-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Détails de réservation */
+        .reservation-details {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .reservation-details h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--color-gold);
+            font-family: 'Alta', sans-serif;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .reservation-details h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--color-red);
+        }
+
+        .room-selection {
+            margin-bottom: 2rem;
+        }
+
+        .room-option {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .room-option:hover {
+            background: rgba(198, 40, 40, 0.2);
+        }
+
+        .room-option.active {
+            background: rgba(198, 40, 40, 0.3);
+            border-left: 4px solid var(--color-gold);
+        }
+
+        .room-option img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .room-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .price-summary {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .price-total {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--color-gold);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-dark);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-red);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #reservation-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            #reservation-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .reservation-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu a {
+                font-size: 1.5rem;
+            }
+            
+            .date-fields {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="header-logo"><a href="../index.html">Goldmas</a></div>
+        <div class="menu-btn" id="menuBtn">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </div>
+    </header>
+
+    <nav class="mobile-menu" id="mobileMenu">
+        <a href="../index.html">Accueil</a>
+        <a href="./explorer.html">Explorer</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./reservation.html" class="active">Réserver</a>
+    </nav>
+
+    <section id="reservation-hero">
+        <h1>Réservez votre séjour</h1>
+        <p>Choisissez parmi nos chambres luxueuses et profitez d'une expérience inoubliable à l'hôtel Goldmas</p>
+    </section>
+
+    <section id="reservation-section">
+        <div class="reservation-container">
+            <div class="reservation-form">
+                <h2>Informations personnelles</h2>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="fullname">Nom complet</label>
+                        <input type="text" id="fullname" name="fullname" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="guests">Nombre de personnes</label>
+                        <select id="guests" name="guests" required>
+                            <option value="1">1 personne</option>
+                            <option value="2">2 personnes</option>
+                            <option value="3">3 personnes</option>
+                            <option value="4">4 personnes</option>
+                            <option value="5+">5+ personnes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="date-fields">
+                        <div class="form-group">
+                            <label for="checkin">Date d'arrivée</label>
+                            <input type="date" id="checkin" name="checkin" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="checkout">Date de départ</label>
+                            <input type="date" id="checkout" name="checkout" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="special">Demandes spéciales</label>
+                        <textarea id="special" name="special" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Confirmer la réservation</button>
+                </form>
+            </div>
+            
+            <div class="reservation-details">
+                <h2>Votre sélection</h2>
+                
+                <div class="room-selection">
+                    <h3>Choisissez votre chambre</h3>
+                    
+                    <div class="room-option active" data-room="deluxe" data-price="290">
+                        <img src="../styles/assets/chambre_A.jpg" alt="Chambre Deluxe">
+                        <div class="room-info">
+                            <h3>Chambre Deluxe</h3>
+                            <p>Lit Queen, WiFi, TV écran plat</p>
+                            <p>€290/nuit</p>
+                        </div>
+                    </div>
+                    
+                    <div class="room-option" data-room="presidentielle" data-price="450">
+                        <img src="../styles/assets/chambre_B.jpg" alt="Suite Présidentielle">
+                        <div class="room-info">
+                            <h3>Suite Présidentielle</h3>
+                            <p>Jacuzzi, Service 24/7, Vue exceptionnelle</p>
+                            <p>€450/nuit</p>
+                        </div>
+                    </div>
+                    
+                    <div class="room-option" data-room="familiale" data-price="200">
+                        <img src="../styles/assets/chambre_S.jpg" alt="Chambre Familiale">
+                        <div class="room-info">
+                            <h3>Chambre Familiale</h3>
+                            <p>2 Lits doubles, Jeux enfants, Baby-sitting</p>
+                            <p>€200/nuit</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="price-summary">
+                    <h3>Résumé des prix</h3>
+                    
+                    <div class="price-item">
+                        <span>Chambre Deluxe x 3 nuits</span>
+                        <span>€870</span>
+                    </div>
+                    
+                    <div class="price-item">
+                        <span>Taxes et frais</span>
+                        <span>€43.50</span>
+                    </div>
+                    
+                    <div class="price-total">
+                        <span>Total</span>
+                        <span>€913.50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="../index.html">Accueil</a>
+            <a href="./explorer.html">Services</a>
+            <a href="./reservation.html">Réservation</a>
+            <a href="./contact.html">Contact</a>
+            <a href="#">Conditions générales</a>
+        </div>
+        <p class="copyright">© 2023 Hotel Goldmas. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Menu hamburger
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Sélection de chambre
+        const roomOptions = document.querySelectorAll('.room-option');
+        
+        roomOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roomOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                updatePriceSummary();
+            });
+        });
+
+        // Mise à jour du résumé des prix
+        function updatePriceSummary() {
+            const selectedRoom = document.querySelector('.room-option.active');
+            const roomPrice = parseFloat(selectedRoom.getAttribute('data-price'));
+            
+            // Calculer le nombre de nuits (simplifié pour l'exemple)
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            
+            let nights = 3; // Valeur par défaut
+            
+            if (checkin && checkout) {
+                const date1 = new Date(checkin);
+                const date2 = new Date(checkout);
+                const diffTime = Math.abs(date2 - date1);
+                nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+            
+            const subtotal = roomPrice * nights;
+            const taxes = subtotal * 0.05;
+            const total = subtotal + taxes;
+            
+            // Mettre à jour l'affichage
+            document.querySelector('.price-item:nth-child(1) span:first-child').textContent = 
+                `${selectedRoom.querySelector('h3').textContent} x ${nights} nuit${nights > 1 ? 's' : ''}`;
+            
+            document.querySelector('.price-item:nth-child(1) span:last-child').textContent = 
+                `€${subtotal.toFixed(2)}`;
+            
+            document.querySelector('.price-item:nth-child(2) span:last-child').textContent = 
+                `€${taxes.toFixed(2)}`;
+            
+            document.querySelector('.price-total span:last-child').textContent = 
+                `€${total.toFixed(2)}`;
+        }
+
+        // Écouteurs pour les dates
+        document.getElementById('checkin').addEventListener('change', updatePriceSummary);
+        document.getElementById('checkout').addEventListener('change', updatePriceSummary);
+
+        // Formulaire de réservation
+        const bookingForm = document.getElementById('bookingForm');
+        
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Récupérer les valeurs du formulaire
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const guests = document.getElementById('guests').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const special = document.getElementById('special').value;
+            
+            const selectedRoom = document.querySelector('.room-option.active');
+            const roomType = selectedRoom.querySelector('h3').textContent;
+            const roomPrice = selectedRoom.getAttribute('data-price');
+            
+            // Calculer le nombre de nuits
+            const date1 = new Date(checkin);
+            const date2 = new Date(checkout);
+            const diffTime = Math.abs(date2 - date1);
+            const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            const subtotal = parseFloat(roomPrice) * nights;
+            const taxes = subtotal * 0.05;
+            const total = subtotal + taxes;
+            
+            // Créer le message WhatsApp
+            const whatsappMessage = `Bonjour Goldmas,\n\nJe souhaite réserver une chambre:\n\n- Nom: ${fullname}\n- Email: ${email}\n- Téléphone: ${phone}\n- Nombre de personnes: ${guests}\n- Dates: ${checkin} au ${checkout} (${nights} nuits)\n- Chambre: ${roomType} (€${roomPrice}/nuit)\n- Total estimé: €${total.toFixed(2)}\n\nDemandes spéciales: ${special || 'Aucune'}\n\nMerci de me confirmer cette réservation. Cordialement,\n${fullname}`;
+            
+            // Encoder le message pour l'URL
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Ouvrir WhatsApp avec le message pré-rempli
+            window.open(`https://wa.me/2439999999999?text=${encodedMessage}`, '_blank');
+            
+            // Réinitialiser le formulaire
+            bookingForm.reset();
+            
+            // Afficher un message de confirmation
+            alert('Merci pour votre réservation! Vous allez être redirigé vers WhatsApp pour finaliser votre demande.');
+        });
+
+        // Initialiser le résumé des prix
+        updatePriceSummary();
+    </script>
+</body>
+</html>

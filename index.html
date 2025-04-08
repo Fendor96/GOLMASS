@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Goldmas - Expérience Immersive</title>
+    <meta name="description" content="Hôtel Goldmas - Expérience de luxe inoubliable à Macampagne. Chambres spacieuses, service exceptionnel et confort ultime.">
+    <title>Hotel Goldmas - Expérience Immersive de Luxe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" href="./styles/assets/chambre_S.jpg" as="image">
     <style>
         :root {
             --color-dark: #0a0a0a;
@@ -12,6 +17,7 @@
             --color-gold: #ffd700;
             --color-light: #f0f0f0;
             --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -25,6 +31,21 @@
             background-color: var(--color-dark);
             color: var(--color-light);
             overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-red);
+            border-radius: 4px;
         }
 
         /* Animation d'entrée */
@@ -52,7 +73,19 @@
             animation: fadeInUp 0.8s forwards;
         }
 
-        /* Header avec menu hamburger */
+        /* Indicateur de scroll */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--color-gold);
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Header amélioré */
         header {
             width: 100%;
             display: flex;
@@ -64,7 +97,17 @@
             z-index: 1000;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        header.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 0.8rem 2rem;
         }
 
         #header-logo a {
@@ -75,6 +118,8 @@
             text-decoration: none;
             letter-spacing: 2px;
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         #header-logo a::after {
@@ -95,7 +140,7 @@
             transform-origin: left;
         }
 
-        /* Menu hamburger */
+        /* Menu hamburger amélioré */
         .menu-btn {
             width: 40px;
             height: 40px;
@@ -106,6 +151,11 @@
             gap: 6px;
             cursor: pointer;
             z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .menu-btn:hover .menu-line {
+            background: var(--color-red);
         }
 
         .menu-line {
@@ -113,10 +163,12 @@
             height: 3px;
             background: var(--color-gold);
             transition: var(--transition);
+            transform-origin: center;
         }
 
         .menu-btn.active .menu-line:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
+            background: var(--color-red);
         }
 
         .menu-btn.active .menu-line:nth-child(2) {
@@ -125,55 +177,71 @@
 
         .menu-btn.active .menu-line:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
+            background: var(--color-red);
         }
 
-        /* Menu mobile */
+        /* Menu mobile amélioré */
         .mobile-menu {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
+            gap: 2.5rem;
             clip-path: circle(0% at 90% 5%);
-            transition: clip-path 1s ease-in-out;
+            transition: clip-path 1.2s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
         }
 
         .mobile-menu.open {
             clip-path: circle(150% at 90% 5%);
+            opacity: 1;
+            visibility: visible;
         }
 
         .mobile-menu a {
             color: var(--color-light);
             text-decoration: none;
-            font-size: 2rem;
+            font-size: 2.2rem;
             position: relative;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.5rem;
             transition: var(--transition);
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
         .mobile-menu a::before {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 0;
-            height: 2px;
+            height: 3px;
             background: var(--color-red);
             transition: var(--transition);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--color-gold);
         }
 
         .mobile-menu a:hover::before {
             width: 100%;
         }
 
-        /* Section Hero avec image de fond */
+        .mobile-menu a.active {
+            color: var(--color-red);
+        }
+
+        /* Section Hero améliorée */
         #hero {
             height: 100vh;
             display: flex;
@@ -199,18 +267,20 @@
 
         #hero h1 {
             font-size: 4.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             font-family: 'Alta', sans-serif;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             letter-spacing: 3px;
+            line-height: 1.2;
         }
 
         #hero p {
             font-size: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             letter-spacing: 2px;
             max-width: 800px;
             line-height: 1.6;
+            padding: 0 2rem;
         }
 
         .cta-btn {
@@ -225,30 +295,61 @@
             transition: var(--transition);
             border: 2px solid transparent;
             box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
 
         .cta-btn:hover {
             background: transparent;
             border-color: var(--color-red);
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(198, 40, 40, 0.6);
+            box-shadow: 0 8px 25px rgba(198, 40, 40, 0.6);
         }
 
-        /* Section Adresse */
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Section Adresse améliorée */
         #addresse {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             background: var(--color-dark);
             position: relative;
             z-index: 1;
             background-image: url("https://www.transparenttextures.com/patterns/cartographer.png");
         }
 
-        #addresse h2 {
+        .section-title {
             font-size: 2.5rem;
             margin-bottom: 3rem;
             text-align: center;
             font-family: 'Alta', sans-serif;
             color: var(--color-red);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-gold);
         }
 
         #items {
@@ -263,12 +364,29 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: var(--transition);
+            min-width: 250px;
+        }
+
+        #items div:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
         }
 
         #items i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--color-red);
+            transition: var(--transition);
+        }
+
+        #items div:hover i {
+            transform: scale(1.2);
+            color: var(--color-gold);
         }
 
         #items p, #items a {
@@ -276,6 +394,11 @@
             text-decoration: none;
             font-size: 1.1rem;
             text-align: center;
+            transition: var(--transition);
+        }
+
+        #items a:hover {
+            color: var(--color-gold);
         }
 
         #ad-link a {
@@ -289,17 +412,19 @@
             transition: var(--transition);
             border: 2px solid transparent;
             letter-spacing: 1px;
+            margin-top: 1rem;
         }
 
         #ad-link a:hover {
             background: transparent;
             border-color: var(--color-red);
             transform: translateY(-5px);
+            color: var(--color-gold);
         }
 
-        /* Section Chambres */
+        /* Section Chambres améliorée */
         #chambre {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             background: white;
             color: var(--color-dark);
             position: relative;
@@ -311,6 +436,20 @@
             text-align: center;
             font-family: 'Alta', sans-serif;
             color: var(--color-red);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+        #chambre h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-gold);
         }
 
         .containers {
@@ -323,8 +462,8 @@
         }
 
         .chambres {
-            width: 300px;
-            height: 400px;
+            width: 350px;
+            height: 450px;
             position: relative;
             overflow: hidden;
             border-radius: 10px;
@@ -334,7 +473,7 @@
 
         .chambres:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(198, 40, 40, 0.3);
+            box-shadow: 0 15px 30px rgba(198, 40, 40, 0.4);
         }
 
         .chambres img {
@@ -345,7 +484,7 @@
         }
 
         .chambres:hover img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .room-info {
@@ -353,7 +492,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem;
+            padding: 2rem;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
             transform: translateY(100%);
@@ -365,50 +504,143 @@
         }
 
         .room-info h4 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            color: var(--color-gold);
         }
 
         .room-price {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--color-gold);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
         }
 
         .room-features {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
         }
 
         .feature {
-            background: rgba(198, 40, 40, 0.3);
+            background: rgba(198, 40, 40, 0.5);
             color: white;
-            padding: 0.3rem 0.8rem;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature i {
             font-size: 0.8rem;
         }
 
         .room-link {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1.5rem;
             background: var(--color-red);
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: var(--transition);
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .room-link:hover {
             background: var(--color-gold);
             color: var(--color-dark);
+            transform: translateY(-3px);
         }
 
-        /* Section Parallax */
+        /* Nouvelle section témoignages */
+        #testimonials {
+            padding: 6rem 2rem;
+            background: var(--color-dark);
+            text-align: center;
+        }
+
+        .testimonial-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 10px;
+            margin: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: none;
+        }
+
+        .testimonial.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .author-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--color-gold);
+        }
+
+        .author-info h4 {
+            color: var(--color-gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .author-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .testimonial-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .testimonial-dot.active {
+            background: var(--color-red);
+            transform: scale(1.2);
+        }
+
+        /* Section Parallax améliorée */
         .parallax-section {
-            height: 50vh;
+            height: 60vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -427,7 +659,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .parallax-content {
@@ -438,28 +670,137 @@
         }
 
         .parallax-content h2 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
             color: var(--color-red);
             font-family: 'Alta', sans-serif;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .parallax-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
         }
 
-        /* Footer */
+        /* Galerie photo */
+        #gallery {
+            padding: 6rem 2rem;
+            background: var(--color-dark);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            aspect-ratio: 4/3;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(198, 40, 40, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        /* Footer amélioré */
         footer {
             background: var(--color-dark);
-            padding: 3rem 2rem;
+            padding: 4rem 2rem 2rem;
             text-align: center;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h4 {
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--color-red);
+        }
+
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            display: block;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .footer-column a:hover {
+            color: var(--color-gold);
+            transform: translateX(5px);
+        }
+
+        .footer-column .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-column .contact-info i {
+            color: var(--color-red);
         }
 
         .social-links {
             display: flex;
-            justify-content: center;
             gap: 1.5rem;
             margin: 1.5rem 0;
         }
@@ -468,46 +809,151 @@
             color: var(--color-light);
             font-size: 1.5rem;
             transition: var(--transition);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .social-links a:hover {
-            color: var(--color-red);
+            color: white;
+            background: var(--color-red);
             transform: translateY(-5px);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Bouton retour en haut */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--color-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--color-gold);
+            color: var(--color-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive amélioré */
+        @media (max-width: 992px) {
             #hero h1 {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             
             #hero p {
-                font-size: 1.2rem;
-            }
-            
-            .containers {
-                flex-direction: column;
-                align-items: center;
+                font-size: 1.3rem;
             }
             
             .chambres {
                 width: 100%;
                 max-width: 400px;
             }
+        }
+
+        @media (max-width: 768px) {
+            #hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            #hero p {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
             
             .mobile-menu a {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
 
             .parallax-section {
-                height: 60vh;
+                height: 70vh;
                 background-attachment: scroll;
+            }
+
+            .parallax-content h2 {
+                font-size: 2.2rem;
+            }
+
+            .parallax-content p {
+                font-size: 1.1rem;
+            }
+
+            .section-title, #chambre h3 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-column h4::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 576px) {
+            #hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .cta-btn {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.9rem;
+            }
+
+            #items div {
+                min-width: 100%;
+            }
+
+            .room-info {
+                padding: 1.5rem;
+            }
+
+            .room-info h4 {
+                font-size: 1.5rem;
+            }
+
+            .room-price {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
+    <div class="scroll-progress"></div>
+    
+    <header id="mainHeader">
         <div id="header-logo"><a href="#">Goldmas</a></div>
         <div class="menu-btn" id="menuBtn">
             <div class="menu-line"></div>
@@ -517,36 +963,45 @@
     </header>
 
     <nav class="mobile-menu" id="mobileMenu">
-        <a href="./index.html">Accueil</a>
-        <a href="./pages/explore.html">Explorer</a>
-        <a href="./pages/Contact.html">Contact</a>
+        <a href="./index.html" class="active">Accueil</a>
+        <a href="./pages/explorer.html">Explorer</a>
+        <a href="./pages/contact.html">Contact</a>
         <a href="./pages/reservation.html">Réserver</a>
     </nav>
 
     <section id="hero" class="animate">
         <h1 class="animate">Bienvenue chez Goldmas</h1>
-        <p class="animate">Le confort assuré dès le pas de la porte...</p>
-        <a href="#chambre" class="cta-btn animate">Explorer</a>
+        <p class="animate">Découvrez un havre de paix où luxe et confort se rencontrent pour créer une expérience inoubliable</p>
+        <a href="#chambre" class="cta-btn animate">Découvrir nos chambres</a>
     </section>
 
     <section id="addresse" class="animate">
         <div>
-            <h2 class="animate">Hôtel Goldmas</h2>
+            <h2 class="section-title animate">Hôtel Goldmas</h2>
         </div>
 
         <div id="items">
-            <div class="animate"><i class="fa-solid fa-home"></i><p>Station Macampagne</p></div>
-            <div class="animate"><i class="fa-solid fa-phone"></i><p><a href="https://wa.me/2439999999999">+243 9900000000</a></p></div>
-            <div class="animate"><i class="fa-solid fa-envelope"></i><p>Goldmas@gmail.com</p></div>
+            <div class="animate">
+                <i class="fa-solid fa-map-marker-alt"></i>
+                <p>Station Macampagne, Avenue des Palmiers 123</p>
+            </div>
+            <div class="animate">
+                <i class="fa-solid fa-phone"></i>
+                <p><a href="https://wa.me/2439999999999">+243 990 000 0000</a></p>
+            </div>
+            <div class="animate">
+                <i class="fa-solid fa-envelope"></i>
+                <p><a href="mailto:goldmas@gmail.com">goldmas@gmail.com</a></p>
+            </div>
         </div>
 
-        <div id="ad-link" class="animate">
-            <a href="./pages/reservation">Réservez</a>
+        <div id="ad-link" class="animate" style="display: flex; justify-content: center;">
+            <a href="./pages/reservation.html">Réservez votre séjour</a>
         </div>
     </section>
 
     <section id="chambre" class="animate">
-        <h3 class="animate">Profitez du confort et du meilleur</h3>
+        <h3 class="animate">Nos Chambres Exclusives</h3>
 
         <div class="containers">
             <!-- Chambre Deluxe -->
@@ -556,12 +1011,12 @@
                     <h4>Chambre Deluxe</h4>
                     <div class="room-price">À partir de €290/nuit</div>
                     <div class="room-features">
-                        <span class="feature">25m²</span>
-                        <span class="feature">Lit Queen</span>
-                        <span class="feature">WiFi</span>
-                        <span class="feature">TV</span>
+                        <span class="feature"><i class="fas fa-ruler-combined"></i> 25m²</span>
+                        <span class="feature"><i class="fas fa-bed"></i> Lit Queen</span>
+                        <span class="feature"><i class="fas fa-wifi"></i> WiFi</span>
+                        <span class="feature"><i class="fas fa-tv"></i> TV écran plat</span>
                     </div>
-                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver maintenant</a>
                 </div>
             </div>
 
@@ -572,12 +1027,12 @@
                     <h4>Suite Présidentielle</h4>
                     <div class="room-price">À partir de €450/nuit</div>
                     <div class="room-features">
-                        <span class="feature">90m²</span>
-                        <span class="feature">Jacuzzi</span>
-                        <span class="feature">Service 24/7</span>
-                        <span class="feature">Vue exceptionnelle</span>
+                        <span class="feature"><i class="fas fa-ruler-combined"></i> 90m²</span>
+                        <span class="feature"><i class="fas fa-hot-tub"></i> Jacuzzi</span>
+                        <span class="feature"><i class="fas fa-concierge-bell"></i> Service 24/7</span>
+                        <span class="feature"><i class="fas fa-binoculars"></i> Vue exceptionnelle</span>
                     </div>
-                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver maintenant</a>
                 </div>
             </div>
 
@@ -588,13 +1043,59 @@
                     <h4>Chambre Familiale</h4>
                     <div class="room-price">À partir de €200/nuit</div>
                     <div class="room-features">
-                        <span class="feature">45m²</span>
-                        <span class="feature">2 Lits doubles</span>
-                        <span class="feature">Jeux enfants</span>
-                        <span class="feature">Baby-sitting</span>
+                        <span class="feature"><i class="fas fa-ruler-combined"></i> 45m²</span>
+                        <span class="feature"><i class="fas fa-bed"></i> 2 Lits doubles</span>
+                        <span class="feature"><i class="fas fa-gamepad"></i> Jeux enfants</span>
+                        <span class="feature"><i class="fas fa-baby"></i> Baby-sitting</span>
                     </div>
-                    <a href="./pages/reservation.html" class="room-link">Réserver</a>
+                    <a href="./pages/reservation.html" class="room-link">Réserver maintenant</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nouvelle section témoignages -->
+    <section id="testimonials" class="animate">
+        <h3 class="section-title animate">Ce que nos clients disent</h3>
+        
+        <div class="testimonial-container">
+            <div class="testimonial active">
+                <p class="testimonial-text">"Un séjour exceptionnel à l'hôtel Goldmas. Le service était impeccable, la chambre spacieuse et luxueuse. La vue depuis la suite présidentielle est tout simplement à couper le souffle. Nous reviendrons certainement!"</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Client" class="author-img">
+                    <div class="author-info">
+                        <h4>Sophie Laurent</h4>
+                        <p>Paris, France</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"L'attention aux détails à l'hôtel Goldmas est remarquable. Tout, des serviettes moelleuses au petit-déjeuner gastronomique, a dépassé nos attentes. Un véritable havre de paix en plein cœur de la ville."</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="author-img">
+                    <div class="author-info">
+                        <h4>Thomas Dupont</h4>
+                        <p>Bruxelles, Belgique</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"Nous avons séjourné dans la chambre familiale avec nos deux enfants. L'espace était parfait, et les services pour enfants ont rendu notre séjour tellement plus relaxant. Le personnel est attentionné et professionnel."</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Client" class="author-img">
+                    <div class="author-info">
+                        <h4>Camille Martin</h4>
+                        <p>Genève, Suisse</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-nav">
+                <div class="testimonial-dot active" data-index="0"></div>
+                <div class="testimonial-dot" data-index="1"></div>
+                <div class="testimonial-dot" data-index="2"></div>
             </div>
         </div>
     </section>
@@ -602,33 +1103,140 @@
     <section class="parallax-section animate" style="background-image: url('./styles/assets/chambre_Aaa.jpg')">
         <div class="parallax-content">
             <h2 class="animate">Une Expérience Inoubliable</h2>
-            <p class="animate">Découvrez le confort ultime et un service exceptionnel dans notre établissement primé.</p>
-            <a href="#contact" class="cta-btn animate">Contactez-nous</a>
+            <p class="animate">Découvrez le confort ultime et un service exceptionnel dans notre établissement primé. Chaque détail a été pensé pour votre bien-être.</p>
+            <a href="./pages/contact.html" class="cta-btn animate">Contactez-nous</a>
         </div>
     </section>
 
-    <footer class="animate">
-        <p>© 2023 Hotel Goldmas. Tous droits réservés.</p>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-tripadvisor"></i></a>
+    <!-- Nouvelle section galerie -->
+    <section id="gallery" class="animate">
+        <h3 class="section-title animate">Galerie</h3>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="./styles/assets/chambre_A.jpg" alt="Hôtel Goldmas" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="./styles/assets/chambre_B.jpg" alt="Hôtel Goldmas" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="./styles/assets/chambre_S.jpg" alt="Hôtel Goldmas" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="./styles/assets/chambre_Aaa.jpg" alt="Hôtel Goldmas" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Restaurant" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1539667468225-eebb663053e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1113&q=80" alt="Spa" loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
         </div>
-        <p>Créé avec passion par Axel Nodier</p>
+    </section>
+
+
+    <div id="map">
+        <!-- Intégration de Google Maps -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.818774238614!2d15.2764144147626!3d-4.322448797012147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a3135e9e6f3a7%3A0x6e4b3a3b3e3e3e3e!2sStation%20Macampagne!5e0!3m2!1sfr!2scd!4v1620000000000!5m2!1sfr!2scd" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <footer class="animate">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>À propos</h4>
+                <p>L'hôtel Goldmas offre une expérience de luxe inégalée à Macampagne, combinant confort moderne et service exceptionnel.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Liens utiles</h4>
+                <a href="./index.html">Accueil</a>
+                <a href="./pages/explorer.html">Nos services</a>
+                <a href="./pages/reservation.html">Réserver</a>
+                <a href="./pages/contact.html">Contact</a>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Station Macampagne, Avenue des Palmiers 123</p>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <p>+243 990 000 0000</p>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <p>goldmas@gmail.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <p>Abonnez-vous pour recevoir nos offres spéciales et actualités.</p>
+                <form>
+                    <input type="email" placeholder="Votre email" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: none; border-radius: 5px;">
+                    <button type="submit" style="background: var(--color-red); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; transition: var(--transition);">S'abonner</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2023 Hotel Goldmas. Tous droits réservés.</p>
+            <p>Créé avec passion par Axel Nodier</p>
+        </div>
     </footer>
 
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+
     <script>
-        // Menu hamburger
+        // Menu hamburger amélioré
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
+        const menuLinks = document.querySelectorAll('.mobile-menu a');
         
         menuBtn.addEventListener('click', () => {
             menuBtn.classList.toggle('active');
             mobileMenu.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : 'auto';
         });
 
-        // Animation au scroll
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Animation au scroll améliorée
         document.addEventListener('DOMContentLoaded', () => {
             const animateElements = document.querySelectorAll('.animate');
             
@@ -648,25 +1256,90 @@
                 observer.observe(el);
             });
 
-            // Cache le header au scroll
+            // Cache le header au scroll amélioré
             let lastScroll = 0;
             const header = document.querySelector('header');
             
             window.addEventListener('scroll', () => {
                 const currentScroll = window.pageYOffset;
                 
-                if (currentScroll <= 0) {
-                    header.classList.remove('hidden');
-                }
-                
-                if (currentScroll > lastScroll && !header.classList.contains('hidden')) {
+                if (currentScroll <= 100) {
+                    header.classList.remove('hidden', 'scrolled');
+                } else if (currentScroll > lastScroll && currentScroll > 100) {
                     header.classList.add('hidden');
-                } else if (currentScroll < lastScroll && header.classList.contains('hidden')) {
+                    header.classList.remove('scrolled');
+                } else if (currentScroll < lastScroll) {
                     header.classList.remove('hidden');
+                    if (currentScroll > 100) {
+                        header.classList.add('scrolled');
+                    }
                 }
                 
                 lastScroll = currentScroll;
+                
+                // Bouton back to top
+                const backToTop = document.getElementById('backToTop');
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+                
+                // Barre de progression du scroll
+                const scrollProgress = document.querySelector('.scroll-progress');
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.pageYOffset / scrollHeight) * 100;
+                scrollProgress.style.width = scrolled + '%';
             });
+            
+            // Témoignages carousel
+            const testimonials = document.querySelectorAll('.testimonial');
+            const dots = document.querySelectorAll('.testimonial-dot');
+            let currentTestimonial = 0;
+            
+            function showTestimonial(index) {
+                testimonials.forEach(testimonial => testimonial.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                testimonials[index].classList.add('active');
+                dots[index].classList.add('active');
+                currentTestimonial = index;
+            }
+            
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    showTestimonial(parseInt(dot.getAttribute('data-index')));
+                });
+            });
+            
+            // Auto-rotation des témoignages
+            setInterval(() => {
+                let nextIndex = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(nextIndex);
+            }, 5000);
+            
+            // Back to top
+            document.getElementById('backToTop').addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Préchargement des images
+            function preloadImage(url) {
+                const img = new Image();
+                img.src = url;
+            }
+            
+            const imagesToPreload = [
+                './styles/assets/chambre_B.jpg',
+                './styles/assets/chambre_Aaa.jpg',
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                'https://images.unsplash.com/photo-1539667468225-eebb663053e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1113&q=80'
+            ];
+            
+            imagesToPreload.forEach(preloadImage);
         });
     </script>
 </body>
