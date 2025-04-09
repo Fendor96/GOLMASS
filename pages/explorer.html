@@ -12,9 +12,8 @@
             --color-gold: #ffd700;
             --color-light: #f0f0f0;
             --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-
 
         * {
             margin: 0;
@@ -27,6 +26,21 @@
             background-color: var(--color-dark);
             color: var(--color-light);
             overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-red);
+            border-radius: 4px;
         }
 
         /* Animation d'entrée */
@@ -41,6 +55,22 @@
             }
         }
 
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .animate {
             opacity: 0;
         }
@@ -49,7 +79,19 @@
             animation: fadeInUp 0.8s forwards;
         }
 
-        /* Header avec menu hamburger */
+        /* Indicateur de scroll */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--color-gold);
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Header amélioré */
         header {
             width: 100%;
             display: flex;
@@ -61,7 +103,17 @@
             z-index: 1000;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        header.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 0.8rem 2rem;
         }
 
         #header-logo a {
@@ -72,9 +124,29 @@
             text-decoration: none;
             letter-spacing: 2px;
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        /* Menu hamburger */
+        #header-logo a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-red);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+
+        #header-logo a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Menu hamburger amélioré */
         .menu-btn {
             width: 40px;
             height: 40px;
@@ -85,6 +157,11 @@
             gap: 6px;
             cursor: pointer;
             z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .menu-btn:hover .menu-line {
+            background: var(--color-red);
         }
 
         .menu-line {
@@ -92,10 +169,12 @@
             height: 3px;
             background: var(--color-gold);
             transition: var(--transition);
+            transform-origin: center;
         }
 
         .menu-btn.active .menu-line:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
+            background: var(--color-red);
         }
 
         .menu-btn.active .menu-line:nth-child(2) {
@@ -104,48 +183,60 @@
 
         .menu-btn.active .menu-line:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
+            background: var(--color-red);
         }
 
-        /* Menu mobile */
+        /* Menu mobile amélioré */
         .mobile-menu {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
+            gap: 2.5rem;
             clip-path: circle(0% at 90% 5%);
-            transition: clip-path 1s ease-in-out;
+            transition: clip-path 1.2s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
         }
 
         .mobile-menu.open {
             clip-path: circle(150% at 90% 5%);
+            opacity: 1;
+            visibility: visible;
         }
 
         .mobile-menu a {
             color: var(--color-light);
             text-decoration: none;
-            font-size: 2rem;
+            font-size: 2.2rem;
             position: relative;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.5rem;
             transition: var(--transition);
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
         .mobile-menu a::before {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 0;
-            height: 2px;
+            height: 3px;
             background: var(--color-red);
             transition: var(--transition);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--color-gold);
         }
 
         .mobile-menu a:hover::before {
@@ -156,9 +247,9 @@
             color: var(--color-red);
         }
 
-        /* Hero Section */
+        /* Hero Section améliorée */
         #explore-hero {
-            height: 60vh;
+            height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -182,16 +273,64 @@
         }
 
         #explore-hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
             font-family: 'Alta', sans-serif;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             letter-spacing: 3px;
+            line-height: 1.2;
         }
 
-        /* Section Découverte */
+        #explore-hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            max-width: 800px;
+            line-height: 1.6;
+            padding: 0 2rem;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover {
+            background: transparent;
+            border-color: var(--color-red);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(198, 40, 40, 0.6);
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Section Découverte améliorée */
         .discovery-section {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             position: relative;
         }
 
@@ -202,17 +341,19 @@
             font-family: 'Alta', sans-serif;
             color: var(--color-red);
             position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
         }
 
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 80px;
             height: 3px;
-            background: var(--color-red);
+            background: var(--color-gold);
         }
 
         .discovery-grid {
@@ -243,6 +384,7 @@
             transition: var(--transition);
             transform: translateY(50px);
             opacity: 0;
+            cursor: pointer;
         }
 
         .discovery-card.in-view {
@@ -252,12 +394,13 @@
 
         .discovery-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(198, 40, 40, 0.3);
+            box-shadow: 0 15px 40px rgba(198, 40, 40, 0.4);
         }
 
         .discovery-image {
             height: 250px;
             overflow: hidden;
+            position: relative;
         }
 
         .discovery-image img {
@@ -268,7 +411,20 @@
         }
 
         .discovery-card:hover .discovery-image img {
-            transform: scale(1.05);
+            transform: scale(1.1);
+        }
+
+        .discovery-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--color-red);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 1;
         }
 
         .discovery-content {
@@ -276,14 +432,37 @@
         }
 
         .discovery-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
             color: var(--color-gold);
         }
 
         .discovery-content p {
             margin-bottom: 1.5rem;
-            line-height: 1.6;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .discovery-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature {
+            background: rgba(198, 40, 40, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature i {
+            font-size: 0.8rem;
         }
 
         .discovery-link {
@@ -293,18 +472,209 @@
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-weight: bold;
+            font-weight: 600;
             transition: var(--transition);
+            letter-spacing: 0.5px;
         }
 
         .discovery-link:hover {
             background: var(--color-gold);
             color: var(--color-dark);
+            transform: translateY(-3px);
         }
 
-        /* Section Parallax */
+        /* Panneau de détails */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 600px;
+            height: 100vh;
+            background: var(--color-dark);
+            z-index: 1002;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .detail-panel.open {
+            transform: translateX(0);
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .detail-close:hover {
+            background: var(--color-red);
+            transform: rotate(90deg);
+        }
+
+        .detail-close i {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .detail-content {
+            padding: 4rem 2rem;
+        }
+
+        .detail-gallery {
+            position: relative;
+            height: 350px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .detail-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .detail-thumbnails {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .detail-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .detail-thumbnail.active {
+            border-color: var(--color-gold);
+        }
+
+        .detail-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-gold);
+            font-family: 'Alta', sans-serif;
+        }
+
+        .detail-price {
+            font-size: 1.8rem;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .detail-description {
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .detail-features {
+            margin-bottom: 2rem;
+        }
+
+        .detail-features h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--color-gold);
+        }
+
+        .detail-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            list-style: none;
+        }
+
+        .detail-list i {
+            color: var(--color-red);
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Overlay pour la galerie */
+        .gallery-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1003;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .gallery-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gallery-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-close:hover {
+            color: var(--color-red);
+            transform: rotate(90deg);
+        }
+
+        .gallery-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        /* Section Parallax améliorée */
         .explore-parallax {
-            height: 50vh;
+            height: 60vh;
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
@@ -323,7 +693,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .parallax-content {
@@ -334,22 +704,81 @@
         }
 
         .parallax-content h2 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
             color: var(--color-red);
             font-family: 'Alta', sans-serif;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Footer */
+        .parallax-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        /* Footer amélioré */
         footer {
             background: var(--color-dark);
-            padding: 3rem 2rem;
+            padding: 4rem 2rem 2rem;
             text-align: center;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h4 {
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--color-red);
+        }
+
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+            display: block;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .footer-column a:hover {
+            color: var(--color-gold);
+            transform: translateX(5px);
+        }
+
+        .footer-column .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-column .contact-info i {
+            color: var(--color-red);
         }
 
         .social-links {
             display: flex;
-            justify-content: center;
             gap: 1.5rem;
             margin: 1.5rem 0;
         }
@@ -358,37 +787,151 @@
             color: var(--color-light);
             font-size: 1.5rem;
             transition: var(--transition);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .social-links a:hover {
-            color: var(--color-red);
+            color: white;
+            background: var(--color-red);
             transform: translateY(-5px);
         }
 
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Bouton retour en haut */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--color-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--color-gold);
+            color: var(--color-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Overlay pour le panneau de détails */
+        .detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .detail-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             #explore-hero h1 {
-                font-size: 2.5rem;
+                font-size: 3.5rem;
             }
             
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .explore-parallax {
-                background-attachment: scroll;
-                height: 60vh;
+            .detail-panel {
+                max-width: 100%;
             }
         }
 
-        .active{
-            color: red;
-            border-bottom: 2px solid red;
+        @media (max-width: 768px) {
+            #explore-hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            #explore-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .mobile-menu a {
+                font-size: 1.8rem;
+            }
+
+            .explore-parallax {
+                height: 70vh;
+                background-attachment: scroll;
+            }
+
+            .parallax-content h2 {
+                font-size: 2.2rem;
+            }
+
+            .parallax-content p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-column h4::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .detail-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            #explore-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .detail-gallery {
+                height: 250px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
+    <div class="scroll-progress"></div>
+    
+    <header id="mainHeader">
         <div id="header-logo"><a href="../index.html">Goldmas</a></div>
         <div class="menu-btn" id="menuBtn">
             <div class="menu-line"></div>
@@ -400,88 +943,124 @@
     <nav class="mobile-menu" id="mobileMenu">
         <a href="../index.html">Accueil</a>
         <a href="./explorer.html" class="active">Explorer</a>
-        <a href="./Contact.html">Contact</a>
+        <a href="./contact.html">Contact</a>
         <a href="./reservation.html">Réserver</a>
     </nav>
 
-
-
     <section id="explore-hero" class="animate">
         <h1 class="animate">Explorez l'Exceptionnel</h1>
+        <p class="animate">Découvrez nos univers soigneusement conçus pour une expérience inoubliable</p>
+        <a href="#discover" class="cta-btn animate">Commencer l'exploration</a>
     </section>
 
-    <section class="discovery-section">
+    <section class="discovery-section" id="discover">
         <h2 class="section-title animate">Nos Univers d'Exception</h2>
         <div class="discovery-grid">
             <!-- Spa -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="spa">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Bien-être</span>
                     <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Spa Luxury" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Spa Céleste</h3>
                     <p>Plongez dans notre oasis de bien-être avec soins signature et piscine à débordement offrant une vue panoramique.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-spa"></i> Massages</span>
+                        <span class="feature"><i class="fas fa-swimming-pool"></i> Piscine</span>
+                        <span class="feature"><i class="fas fa-leaf"></i> Sauna</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
 
             <!-- Restaurant -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="restaurant">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Gastronomie</span>
                     <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Restaurant" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Restaurant Étoilé</h3>
                     <p>Cuisine gastronomique revisitée par notre chef étoilé avec produits locaux et cave à vin exceptionnelle.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-utensils"></i> Chef étoilé</span>
+                        <span class="feature"><i class="fas fa-wine-glass-alt"></i> Cave à vin</span>
+                        <span class="feature"><i class="fas fa-sun"></i> Terrasse</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
 
             <!-- Piscine -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="pool">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Détente</span>
                     <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Piscine" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Oasis Infinie</h3>
                     <p>Notre piscine à l'architecture avant-gardiste semble se fondre dans l'horizon avec son eau turquoise.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-umbrella-beach"></i> Transats</span>
+                        <span class="feature"><i class="fas fa-cocktail"></i> Bar</span>
+                        <span class="feature"><i class="fas fa-water"></i> Vue panoramique</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
 
             <!-- Bar -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="bar">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Mixologie</span>
                     <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Bar" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Bar Constellation</h3>
                     <p>Un voyage mixologique sous un plafond étoilé interactif. Cocktails signatures inspirés des constellations.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-cocktail"></i> Cocktails</span>
+                        <span class="feature"><i class="fas fa-music"></i> Ambiance</span>
+                        <span class="feature"><i class="fas fa-star"></i> Dégustation</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
 
             <!-- Fitness -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="fitness">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Fitness</span>
                     <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Fitness" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Espace Vitalité</h3>
                     <p>Centre fitness high-tech avec coach personnel, yoga face à la mer et programmes de remise en forme sur mesure.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-dumbbell"></i> Équipements</span>
+                        <span class="feature"><i class="fas fa-user-alt"></i> Coach</span>
+                        <span class="feature"><i class="fas fa-spa"></i> Yoga</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
 
             <!-- Événements -->
-            <div class="discovery-card animate">
+            <div class="discovery-card animate" data-service="events">
                 <div class="discovery-image">
+                    <span class="discovery-badge">Événements</span>
                     <img src="https://images.unsplash.com/photo-1679678691006-0ad24fecb769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Événements" loading="lazy">
                 </div>
                 <div class="discovery-content">
                     <h3>Salons Événementiels</h3>
                     <p>Espaces modulables pour réceptions, mariages et séminaires avec service traiteur et technologie de pointe.</p>
-                    <a href="#" class="discovery-link">Découvrir</a>
+                    <div class="discovery-features">
+                        <span class="feature"><i class="fas fa-calendar-alt"></i> Événements</span>
+                        <span class="feature"><i class="fas fa-utensils"></i> Traiteur</span>
+                        <span class="feature"><i class="fas fa-video"></i> Technologie</span>
+                    </div>
+                    <a href="./reservation.html" class="discovery-link">Reserver</a>
                 </div>
             </div>
         </div>
@@ -491,31 +1070,249 @@
         <div class="parallax-content">
             <h2 class="animate">Votre Expérience Sur Mesure</h2>
             <p class="animate">Nos concierges élaborent des parcours personnalisés pour rendre votre séjour inoubliable.</p>
+            <a href="./contact.html" class="cta-btn animate">Contactez notre conciergerie</a>
         </div>
     </section>
 
-    <footer class="animate">
-        <p>© 2025 Hotel GoldMass. Tous droits réservés.</p>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-tripadvisor"></i></a>
+    <!-- Panneau de détails -->
+    <div class="detail-overlay" id="detailOverlay"></div>
+    
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-close" id="detailClose">
+            <i class="fas fa-times"></i>
         </div>
-        <p>Créé avec passion par Axel Nodier</p>
+        
+        <div class="detail-content">
+            <div class="detail-gallery">
+                <img src="" alt="" id="detailMainImage">
+            </div>
+            
+            <div class="detail-thumbnails" id="detailThumbnails">
+                <!-- Les miniatures seront ajoutées dynamiquement -->
+            </div>
+            
+            <div class="detail-info">
+                <h2 id="detailTitle">Spa Céleste</h2>
+                <div class="detail-price" id="detailPrice">À partir de €120</div>
+                
+                <p class="detail-description" id="detailDescription">
+                    Notre Spa Céleste est un havre de paix conçu pour votre bien-être absolu. Avec une vue panoramique sur la ville, nos installations premium incluent des cabines de massage privées, un hammam, un sauna finlandais et une piscine à débordement chauffée toute l'année. Nos thérapeutes certifiés proposent des soins sur mesure utilisant des produits naturels et locaux.
+                </p>
+                
+                <div class="detail-features">
+                    <h3>Caractéristiques</h3>
+                    <ul class="detail-list" id="detailFeatures">
+                        <!-- Les caractéristiques seront ajoutées dynamiquement -->
+                    </ul>
+                </div>
+                
+                <div class="detail-actions">
+                    <a href="./reservation.html" class="cta-btn">Réserver maintenant</a>
+                    <a href="./contact.html" class="discovery-link" style="background: transparent; border: 2px solid var(--color-red);">Poser une question</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Galerie en plein écran -->
+    <div class="gallery-overlay" id="galleryOverlay">
+        <div class="gallery-close" id="galleryClose">
+            <i class="fas fa-times"></i>
+        </div>
+        <img src="" alt="" class="gallery-image" id="galleryImage">
+    </div>
+
+    <!-- Footer amélioré -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>À propos</h4>
+                <p>L'hôtel Goldmas offre une expérience de luxe inégalée à Macampagne, combinant confort moderne et service exceptionnel.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Liens utiles</h4>
+                <a href="../index.html">Accueil</a>
+                <a href="./explorer.html">Nos services</a>
+                <a href="./reservation.html">Réserver</a>
+                <a href="./contact.html">Contact</a>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Station Macampagne, Avenue des Palmiers 123</p>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <p>+243 990 000 0000</p>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <p>goldmas@gmail.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <p>Abonnez-vous pour recevoir nos offres spéciales et actualités.</p>
+                <form>
+                    <input type="email" placeholder="Votre email" style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: none; border-radius: 5px;">
+                    <button type="submit" style="background: var(--color-red); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; transition: var(--transition);">S'abonner</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2023 Hotel Goldmas. Tous droits réservés.</p>
+            <p>Créé avec passion par Axel Nodier</p>
+        </div>
     </footer>
 
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
     <script>
+        // Données des services
+        const servicesData = {
+            spa: {
+                title: "Spa Céleste",
+                price: "À partir de €120",
+                description: "Notre Spa Céleste est un havre de paix conçu pour votre bien-être absolu. Avec une vue panoramique sur la ville, nos installations premium incluent des cabines de massage privées, un hammam, un sauna finlandais et une piscine à débordement chauffée toute l'année. Nos thérapeutes certifiés proposent des soins sur mesure utilisant des produits naturels et locaux.",
+                features: [
+                    "Cabines de massage privées",
+                    "Piscine à débordement chauffée",
+                    "Hammam et sauna finlandais",
+                    "Produits naturels et locaux",
+                    "Thérapeutes certifiés",
+                    "Soins personnalisés"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1543720061-1489fad0b9a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1562321256-178fd6f5ddfb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                ]
+            },
+            restaurant: {
+                title: "Restaurant Étoilé",
+                price: "Menu à partir de €75",
+                description: "Notre restaurant gastronomique, dirigé par notre chef étoilé, propose une cuisine inventive mettant en valeur les produits locaux de saison. Notre cave à vin, primée à plusieurs reprises, compte plus de 500 références soigneusement sélectionnées. La terrasse panoramique offre une vue imprenable sur la ville.",
+                features: [
+                    "Cuisine du chef étoilé",
+                    "Cave à vin primée (500+ références)",
+                    "Terrasse panoramique",
+                    "Produits locaux de saison",
+                    "Menu dégustation disponible",
+                    "Service sommelier"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
+                ]
+            },
+            pool: {
+                title: "Oasis Infinie",
+                price: "Accès inclus avec le séjour",
+                description: "Notre piscine à l'architecture avant-gardiste semble se fondre dans l'horizon avec son eau turquoise. Bordée de transats luxueux et d'un bar de piscine servant des cocktails rafraîchissants, c'est l'endroit idéal pour se détendre tout en profitant d'une vue à couper le souffle. Ouverte toute l'année et chauffée en hiver.",
+                features: [
+                    "Piscine à débordement",
+                    "Vue panoramique exceptionnelle",
+                    "Bar de piscine",
+                    "Transats luxueux",
+                    "Chauffée en hiver",
+                    "Service de boissons et snacks"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                ]
+            },
+            bar: {
+                title: "Bar Constellation",
+                price: "Cocktails à partir de €12",
+                description: "Notre bar exclusif propose un voyage mixologique sous un plafond étoilé interactif. Nos barmen créatifs ont conçu une carte de cocktails signatures inspirés des constellations, utilisant des ingrédients artisanaux et des techniques innovantes. L'ambiance intime est parfaite pour une soirée inoubliable.",
+                features: [
+                    "Cocktails signatures",
+                    "Plafond étoilé interactif",
+                    "Ambiance intimiste",
+                    "Ingrédients artisanaux",
+                    "Dégustation de spiritueux",
+                    "Musique live certains soirs"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80",
+                    "https://images.unsplash.com/photo-1539667468225-eebb663053e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1113&q=80",
+                    "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
+                ]
+            },
+            fitness: {
+                title: "Espace Vitalité",
+                price: "Accès 24/7 pour les clients",
+                description: "Notre centre de fitness high-tech est équipé des derniers appareils Technogym. Des coachs personnels sont disponibles pour créer des programmes sur mesure. Nous proposons également des cours de yoga et pilates face à la mer dans notre studio dédié. Complétez votre entraînement par un passage dans notre espace récupération avec sauna et bain à remous.",
+                features: [
+                    "Équipements Technogym dernier cri",
+                    "Coach personnel disponible",
+                    "Studio de yoga et pilates",
+                    "Cours collectifs quotidiens",
+                    "Espace récupération",
+                    "Ouvert 24h/24"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                ]
+            },
+            events: {
+                title: "Salons Événementiels",
+                price: "Sur devis",
+                description: "Nos espaces événementiels modulables peuvent accueillir des réceptions de 10 à 300 personnes. Idéal pour mariages, séminaires ou lancements produits, ils bénéficient d'une technologie audiovisuelle de pointe et d'un service traiteur étoilé. Notre équipe événementielle dédiée s'occupe de chaque détail pour garantir le succès de votre événement.",
+                features: [
+                    "Capacité jusqu'à 300 personnes",
+                    "Technologie audiovisuelle haut de gamme",
+                    "Service traiteur étoilé",
+                    "Équipe événementielle dédiée",
+                    "Décoration sur mesure",
+                    "Espaces modulables"
+                ],
+                images: [
+                    "https://images.unsplash.com/photo-1679678691006-0ad24fecb769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                ]
+            }
+        };
+
         // Menu hamburger
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
+        const menuLinks = document.querySelectorAll('.mobile-menu a');
         
         menuBtn.addEventListener('click', () => {
             menuBtn.classList.toggle('active');
             mobileMenu.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : 'auto';
         });
 
-        // Animation au scroll
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Animation au scroll améliorée
         document.addEventListener('DOMContentLoaded', () => {
             const animateElements = document.querySelectorAll('.animate');
             const discoveryCards = document.querySelectorAll('.discovery-card');
@@ -544,25 +1341,166 @@
                 card.style.transitionDelay = `${index * 0.1}s`;
             });
 
-            // Cache le header au scroll
+            // Cache le header au scroll amélioré
             let lastScroll = 0;
             const header = document.querySelector('header');
             
             window.addEventListener('scroll', () => {
                 const currentScroll = window.pageYOffset;
                 
-                if (currentScroll <= 0) {
-                    header.classList.remove('hidden');
-                }
-                
-                if (currentScroll > lastScroll && !header.classList.contains('hidden')) {
+                if (currentScroll <= 100) {
+                    header.classList.remove('hidden', 'scrolled');
+                } else if (currentScroll > lastScroll && currentScroll > 100) {
                     header.classList.add('hidden');
-                } else if (currentScroll < lastScroll && header.classList.contains('hidden')) {
+                    header.classList.remove('scrolled');
+                } else if (currentScroll < lastScroll) {
                     header.classList.remove('hidden');
+                    if (currentScroll > 100) {
+                        header.classList.add('scrolled');
+                    }
                 }
                 
                 lastScroll = currentScroll;
+                
+                // Bouton back to top
+                const backToTop = document.getElementById('backToTop');
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+                
+                // Barre de progression du scroll
+                const scrollProgress = document.querySelector('.scroll-progress');
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.pageYOffset / scrollHeight) * 100;
+                scrollProgress.style.width = scrolled + '%';
             });
+            
+            // Back to top
+            document.getElementById('backToTop').addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Préchargement des images
+            function preloadImage(url) {
+                const img = new Image();
+                img.src = url;
+            }
+            
+            // Précharger toutes les images des services
+            Object.values(servicesData).forEach(service => {
+                service.images.forEach(preloadImage);
+            });
+        });
+
+        // Gestion du panneau de détails
+        const detailPanel = document.getElementById('detailPanel');
+        const detailOverlay = document.getElementById('detailOverlay');
+        const detailClose = document.getElementById('detailClose');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailDescription = document.getElementById('detailDescription');
+        const detailFeatures = document.getElementById('detailFeatures');
+        const detailMainImage = document.getElementById('detailMainImage');
+        const detailThumbnails = document.getElementById('detailThumbnails');
+        
+        // Gestion de la galerie
+        const galleryOverlay = document.getElementById('galleryOverlay');
+        const galleryClose = document.getElementById('galleryClose');
+        const galleryImage = document.getElementById('galleryImage');
+        
+        // Ouvrir le panneau de détails lorsqu'on clique sur une carte
+        document.querySelectorAll('.discovery-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Empêcher l'ouverture si on clique sur un lien
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                
+                const serviceId = card.getAttribute('data-service');
+                const serviceData = servicesData[serviceId];
+                
+                // Mettre à jour les informations du panneau
+                detailTitle.textContent = serviceData.title;
+                detailPrice.textContent = serviceData.price;
+                detailDescription.textContent = serviceData.description;
+                
+                // Mettre à jour les caractéristiques
+                detailFeatures.innerHTML = '';
+                serviceData.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check"></i> ${feature}`;
+                    detailFeatures.appendChild(li);
+                });
+                
+                // Mettre à jour les images
+                detailMainImage.src = serviceData.images[0];
+                detailMainImage.alt = serviceData.title;
+                
+                detailThumbnails.innerHTML = '';
+                serviceData.images.forEach((image, index) => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'detail-thumbnail' + (index === 0 ? ' active' : '');
+                    thumbnail.innerHTML = `<img src="${image}" alt="${serviceData.title}">`;
+                    
+                    thumbnail.addEventListener('click', () => {
+                        // Mettre à jour l'image principale
+                        detailMainImage.src = image;
+                        
+                        // Mettre à jour les miniatures actives
+                        document.querySelectorAll('.detail-thumbnail').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        thumbnail.classList.add('active');
+                    });
+                    
+                    detailThumbnails.appendChild(thumbnail);
+                });
+                
+                // Ouvrir le panneau
+                detailOverlay.classList.add('open');
+                detailPanel.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Fermer le panneau de détails
+        detailClose.addEventListener('click', closeDetailPanel);
+        detailOverlay.addEventListener('click', closeDetailPanel);
+        
+        function closeDetailPanel() {
+            detailOverlay.classList.remove('open');
+            detailPanel.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Ouvrir l'image en grand lorsqu'on clique sur l'image principale
+        detailMainImage.addEventListener('click', () => {
+            galleryImage.src = detailMainImage.src;
+            galleryImage.alt = detailTitle.textContent;
+            galleryOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Fermer la galerie
+        galleryClose.addEventListener('click', () => {
+            galleryOverlay.classList.remove('open');
+            document.body.style.overflow = 'hidden'; // Garder hidden car le panneau est peut-être encore ouvert
+        });
+        
+        // Permettre de fermer avec ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (galleryOverlay.classList.contains('open')) {
+                    galleryOverlay.classList.remove('open');
+                } else if (detailPanel.classList.contains('open')) {
+                    closeDetailPanel();
+                }
+            }
         });
     </script>
 </body>
